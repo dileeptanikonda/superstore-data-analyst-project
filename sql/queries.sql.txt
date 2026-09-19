@@ -1,0 +1,44 @@
+SELECT COUNT(*) FROM orders;
+-- First 10 rows
+SELECT * FROM orders LIMIT 10;
+-- Total sales by category
+SELECT Category, SUM(Sales) AS Total_Sales
+FROM orders
+GROUP BY Category
+ORDER BY Total_Sales DESC;
+-- Sales and profit by region
+SELECT Region, SUM(Sales) AS Total_Sales, SUM(Profit) AS Total_Profit
+FROM orders
+GROUP BY Region
+ORDER BY Total_Profit DESC;
+-- Monthly sales trend
+SELECT DATE_FORMAT(`Order Date`, '%Y-%m') AS Month, SUM(Sales) AS Total_Sales
+FROM orders
+GROUP BY Month
+ORDER BY Month;
+-- Top 10 customers by revenue
+SELECT `Customer Name`, SUM(Sales) AS Revenue
+FROM orders
+GROUP BY `Customer Name`
+ORDER BY Revenue DESC
+LIMIT 10;
+-- Sub-categories losing the most money
+SELECT `Sub-Category`, SUM(Profit) AS Total_Profit
+FROM orders
+GROUP BY `Sub-Category`
+ORDER BY Total_Profit ASC
+LIMIT 5;
+-- Average order value
+SELECT AVG(Sales) AS Avg_Order_Value FROM orders;
+
+-- Discount impact on profit
+SELECT Discount, AVG(Profit) AS Avg_Profit
+FROM orders
+GROUP BY Discount
+ORDER BY Discount;
+
+-- Ranking categories by profit using a window function (good to show off)
+SELECT Category, SUM(Profit) AS Total_Profit,
+       RANK() OVER (ORDER BY SUM(Profit) DESC) AS Profit_Rank
+FROM orders
+GROUP BY Category;
